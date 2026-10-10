@@ -89,9 +89,10 @@
     background: transparent;
     color: #ffd93d;
     font-weight: 600;
-    font-size: clamp(0.75em, 3vw, 0.9em);
+    font-size: clamp(0.7em, 2.8vw, 0.88em);
     cursor: pointer;
     transition: all 0.2s;
+    white-space: nowrap;
   }
   .subtabs button:active { transform: scale(0.96); }
   .subtabs button.active {
@@ -121,6 +122,45 @@
     padding-bottom: 8px;
     line-height: 1.35;
   }
+
+  /* ===== Pengertian ===== */
+  .pengertian {
+    background: rgba(126,232,250,0.08);
+    padding: 14px 16px;
+    border-radius: 12px;
+    border-left: 4px solid #7ee8fa;
+    margin-bottom: 12px;
+    line-height: 1.7;
+    font-size: clamp(0.85em, 3.2vw, 1em);
+  }
+  .pengertian p { margin-bottom: 10px; }
+  .pengertian p:last-child { margin-bottom: 0; }
+  .pengertian b { color: #ffd93d; }
+  .pengertian .highlight {
+    color: #7ee8fa;
+    font-weight: 600;
+  }
+  .ciri-box {
+    background: rgba(255,217,61,0.08);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border-left: 4px solid #ffd93d;
+    margin-top: 12px;
+  }
+  .ciri-box .judul {
+    color: #ffd93d;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: clamp(0.85em, 3.2vw, 1em);
+  }
+  .ciri-box ul {
+    padding-left: 20px;
+    line-height: 1.7;
+    font-size: clamp(0.8em, 3vw, 0.95em);
+  }
+  .ciri-box ul li { margin-bottom: 4px; color: #e8eef7; }
+
+  /* ===== Rumus ===== */
   .rumus-box {
     background: rgba(255,255,255,0.08);
     padding: 12px 14px;
@@ -231,9 +271,17 @@
   }
 
   /* ===== Layar sangat kecil ===== */
+  @media (max-width: 400px) {
+    .subtabs button {
+      min-width: 0;
+      flex: 1 1 calc(50% - 8px);
+      padding: 9px 6px;
+      font-size: 0.75em;
+    }
+    .menu { gap: 8px; }
+  }
   @media (max-width: 360px) {
     .menu { grid-template-columns: 1fr; }
-    .subtabs button { min-width: 70px; padding: 8px; }
   }
 </style>
 </head>
@@ -255,6 +303,7 @@
 
   <!-- Sub Tab -->
   <div class="subtabs" id="subTabs" style="display:none;">
+    <button data-sub="pengertian">📖 Pengertian</button>
     <button data-sub="rumus">📐 Rumus</button>
     <button data-sub="contoh">📝 Contoh Soal</button>
     <button data-sub="animasi">🎬 Animasi</button>
@@ -276,6 +325,23 @@
 const data = {
   glb: {
     nama: "Gerak Lurus Beraturan (GLB)",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Lurus Beraturan (GLB)</b> adalah gerak suatu benda yang lintasannya berupa garis lurus dengan <span class="highlight">kecepatan tetap (konstan)</span>. Artinya, dalam selang waktu yang sama, benda menempuh jarak yang sama pula.</p>
+        <p>Pada GLB, <b>percepatan benda sama dengan nol (a = 0)</b> karena tidak ada perubahan kecepatan. Baik besar maupun arah kecepatannya selalu tetap sepanjang gerakan.</p>
+        <p>Contoh dalam kehidupan sehari-hari: mobil yang melaju dengan kecepatan tetap di jalan tol yang lurus, kereta api yang bergerak dengan kecepatan konstan, atau seseorang yang berlari dengan kecepatan stabil di lintasan lurus.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri GLB:</div>
+        <ul>
+          <li>Lintasan berupa garis lurus</li>
+          <li>Kecepatan tetap (v = konstan)</li>
+          <li>Percepatan nol (a = 0)</li>
+          <li>Grafik v-t berbentuk garis horizontal</li>
+          <li>Grafik s-t berbentuk garis lurus miring</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Kecepatan</div>
@@ -307,6 +373,23 @@ const data = {
   },
   glbb: {
     nama: "Gerak Lurus Berubah Beraturan (GLBB)",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Lurus Berubah Beraturan (GLBB)</b> adalah gerak benda pada lintasan lurus dengan <span class="highlight">percepatan tetap (konstan)</span>. Kecepatan benda berubah secara teratur terhadap waktu — bisa bertambah (dipercepat) atau berkurang (diperlambat).</p>
+        <p>Jika percepatan searah dengan gerak benda, maka benda <b>dipercepat</b> (a positif). Sebaliknya, jika percepatan berlawanan arah dengan gerak, benda <b>diperlambat</b> (a negatif).</p>
+        <p>Contoh: mobil yang mula-mula diam lalu digas (dipercepat), mobil yang mengerem mendekati lampu merah (diperlambat), atau bola yang menggelinding menuruni bidang miring.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri GLBB:</div>
+        <ul>
+          <li>Lintasan berupa garis lurus</li>
+          <li>Percepatan tetap (a = konstan)</li>
+          <li>Kecepatan berubah secara teratur</li>
+          <li>Grafik v-t berbentuk garis lurus miring</li>
+          <li>Grafik a-t berbentuk garis horizontal</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Kecepatan sesaat</div>
@@ -338,6 +421,23 @@ const data = {
   },
   gjb: {
     nama: "Gerak Jatuh Bebas",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Jatuh Bebas (GJB)</b> adalah gerak suatu benda yang <span class="highlight">jatuh dari ketinggian tertentu tanpa kecepatan awal (v₀ = 0)</span>. Benda hanya dipengaruhi oleh gaya gravitasi bumi.</p>
+        <p>Pada GJB, percepatan yang dialami benda adalah percepatan gravitasi (g) yang arahnya selalu ke bawah (menuju pusat bumi). Nilai g ≈ 9,8 m/s² dan sering dibulatkan menjadi 10 m/s² untuk memudahkan perhitungan.</p>
+        <p>Contoh: buah kelapa yang jatuh dari pohonnya, buku yang terlepas dari meja, atau koin yang dijatuhkan dari ketinggian.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri GJB:</div>
+        <ul>
+          <li>Kecepatan awal nol (v₀ = 0)</li>
+          <li>Percepatan = percepatan gravitasi (a = g)</li>
+          <li>Arah gerak selalu ke bawah</li>
+          <li>Tidak dipengaruhi massa benda (asalkan gesekan udara diabaikan)</li>
+          <li>Merupakan kasus khusus GLBB dipercepat</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Kecepatan jatuh</div>
@@ -369,6 +469,23 @@ const data = {
   },
   gvk: {
     nama: "Gerak Vertikal Ke Atas",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Vertikal Ke Atas (GVA)</b> adalah gerak benda yang <span class="highlight">dilempar tegak lurus ke atas dengan kecepatan awal tertentu (v₀ ≠ 0)</span>. Selama bergerak naik, benda mengalami perlambatan karena gravitasi bumi.</p>
+        <p>Karena arah gerak benda ke atas sedangkan gravitasi ke bawah, maka benda mengalami <b>perlambatan (a = −g)</b>. Benda akan terus melambat sampai mencapai titik tertinggi, di mana kecepatannya nol (v = 0), lalu jatuh kembali ke bawah.</p>
+        <p>Contoh: bola yang dilempar ke atas, batu yang dilontarkan vertikal ke atas, atau air mancur yang menyemprot ke atas.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri GVA:</div>
+        <ul>
+          <li>Kecepatan awal tidak nol (v₀ ≠ 0) dan arahnya ke atas</li>
+          <li>Percepatan = −g (berlawanan arah gerak)</li>
+          <li>Kecepatan berkurang saat naik</li>
+          <li>Kecepatan nol di titik tertinggi</li>
+          <li>Waktu naik = waktu turun</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Kecepatan sesaat</div>
@@ -405,6 +522,23 @@ const data = {
   },
   gvkb: {
     nama: "Gerak Vertikal Ke Bawah",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Vertikal Ke Bawah (GVKB)</b> adalah gerak benda yang <span class="highlight">dilempar tegak lurus ke bawah dengan kecepatan awal tertentu (v₀ ≠ 0)</span>. Berbeda dengan jatuh bebas, pada GVKB benda sudah memiliki kecepatan awal saat mulai bergerak.</p>
+        <p>Arah gerak benda searah dengan gravitasi bumi, sehingga benda mengalami <b>percepatan (a = +g)</b>. Semakin lama bergerak, kecepatan benda semakin bertambah besar.</p>
+        <p>Contoh: batu yang dilempar ke bawah dari atas gedung, bola yang dipantulkan ke bawah dengan sengaja, atau benda yang dilempar dari pesawat menuju tanah.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri GVKB:</div>
+        <ul>
+          <li>Kecepatan awal tidak nol (v₀ ≠ 0) dan arahnya ke bawah</li>
+          <li>Percepatan = +g (searah gerak)</li>
+          <li>Kecepatan bertambah secara teratur</li>
+          <li>Merupakan kasus GLBB dipercepat</li>
+          <li>Perbedaan utama dengan GJB: GJB v₀ = 0, GVKB v₀ ≠ 0</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Kecepatan sesaat</div>
@@ -441,6 +575,23 @@ const data = {
   },
   parabola: {
     nama: "Gerak Parabola",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Parabola</b> adalah gerak suatu benda yang <span class="highlight">dilempar dengan sudut tertentu terhadap horizontal</span>, sehingga lintasannya berbentuk lengkungan parabola. Gerak ini merupakan perpaduan antara GLB pada arah horizontal dan GLBB pada arah vertikal.</p>
+        <p>Pada arah <b>horizontal (sumbu-x)</b>, benda bergerak lurus beraturan karena tidak ada percepatan (v<sub>x</sub> tetap). Sedangkan pada arah <b>vertikal (sumbu-y)</b>, benda mengalami GLBB dipengaruhi gravitasi.</p>
+        <p>Contoh: bola yang ditendang melambung, peluru yang ditembakkan dari meriam, atau atlet lompat jauh saat melompat.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri Gerak Parabola:</div>
+        <ul>
+          <li>Lintasan berbentuk parabola</li>
+          <li>Merupakan gabungan GLB (horizontal) dan GLBB (vertikal)</li>
+          <li>Kecepatan pada sumbu-x tetap (v<sub>x</sub> = konstan)</li>
+          <li>Kecepatan pada sumbu-y berubah karena gravitasi</li>
+          <li>Jangkauan maksimum tercapai saat sudut elevasi 45°</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Kecepatan awal (komponen)</div>
@@ -477,6 +628,23 @@ const data = {
   },
   gmb: {
     nama: "Gerak Melingkar Beraturan (GMB)",
+    pengertian: `
+      <div class="pengertian">
+        <p><b>Gerak Melingkar Beraturan (GMB)</b> adalah gerak suatu benda yang <span class="highlight">lintasannya berupa lingkaran dengan besar kecepatan linear tetap</span>. Meskipun besar kecepatannya tetap, arah kecepatan benda selalu berubah setiap saat (selalu menyinggung lingkaran).</p>
+        <p>Karena arah kecepatan terus berubah, benda mengalami <b>percepatan sentripetal</b> yang selalu mengarah ke pusat lingkaran. Percepatan ini yang membuat benda tetap bergerak melingkar.</p>
+        <p>Contoh: gerak bulan mengelilingi bumi, kipas angin yang berputar, atau mobil yang menikung di jalan melingkar dengan kecepatan tetap.</p>
+      </div>
+      <div class="ciri-box">
+        <div class="judul">🔎 Ciri-ciri GMB:</div>
+        <ul>
+          <li>Lintasan berbentuk lingkaran</li>
+          <li>Besar kecepatan linear tetap (v = konstan)</li>
+          <li>Arah kecepatan selalu berubah (menyinggung lingkaran)</li>
+          <li>Ada percepatan sentripetal (a<sub>s</sub> = v²/r)</li>
+          <li>Periode dan frekuensi putaran tetap</li>
+        </ul>
+      </div>
+    `,
     rumus: `
       <div class="rumus-box">
         <div class="label">Periode & Frekuensi</div>
@@ -551,7 +719,7 @@ menuTopik.addEventListener('click', e => {
     <h2>${data[topikAktif].nama}</h2>
     <div class="placeholder">
       <span class="icon">📌</span>
-      Pilih menu di atas:<br>Rumus, Contoh Soal, atau Animasi
+      Pilih menu di atas:<br>Pengertian, Rumus, Contoh Soal, atau Animasi
     </div>`;
 });
 
@@ -566,7 +734,9 @@ subTabs.addEventListener('click', e => {
   [...subTabs.children].forEach(b => b.classList.toggle('active', b === btn));
   stopAnim();
 
-  if (subAktif === 'rumus') {
+  if (subAktif === 'pengertian') {
+    panel.innerHTML = `<h2>📖 Pengertian — ${data[topikAktif].nama}</h2>${data[topikAktif].pengertian}`;
+  } else if (subAktif === 'rumus') {
     panel.innerHTML = `<h2>📐 Rumus — ${data[topikAktif].nama}</h2>${data[topikAktif].rumus}`;
   } else if (subAktif === 'contoh') {
     panel.innerHTML = `<h2>📝 Contoh Soal — ${data[topikAktif].nama}</h2>${data[topikAktif].contoh}`;
@@ -749,7 +919,6 @@ function initAnimasi(jenis) {
       const sudut = p.omega * t;
       const x = p.cx + p.r * Math.cos(sudut);
       const y = p.cy + p.r * Math.sin(sudut);
-      // lintasan lingkaran
       ctx.strokeStyle = 'rgba(126,232,250,0.35)';
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 6]);
@@ -757,18 +926,15 @@ function initAnimasi(jenis) {
       ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2);
       ctx.stroke();
       ctx.setLineDash([]);
-      // jari-jari
       ctx.strokeStyle = 'rgba(255,217,61,0.5)';
       ctx.beginPath();
       ctx.moveTo(p.cx, p.cy);
       ctx.lineTo(x, y);
       ctx.stroke();
-      // pusat
       ctx.beginPath();
       ctx.arc(p.cx, p.cy, 4, 0, Math.PI * 2);
       ctx.fillStyle = '#7ee8fa';
       ctx.fill();
-      // bola
       drawBall(x, y, '#ff6b6b');
       label(`r = ${p.r} px`, 20, 30);
       label(`ω = ${p.omega.toFixed(2)} rad/s`, 20, 55);
@@ -800,7 +966,6 @@ function initAnimasi(jenis) {
     playing = false;
   };
 
-  // gambar frame awal
   animId = requestAnimationFrame(frame);
   playing = false;
 }
