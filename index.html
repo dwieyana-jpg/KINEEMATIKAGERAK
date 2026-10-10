@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINEMATIKA GERAK - Media Interaktif</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    font-family: -apple-system, 'Segoe UI', Roboto, Tahoma, sans-serif;
+    background: linear-gradient(160deg, #1e3c72 0%, #2a5298 60%, #1e3c72 100%);
+    min-height: 100vh;
+    color: #fff;
+    padding: 12px;
+    overflow-x: hidden;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  h1 {
+    text-align: center;
+    font-size: clamp(1.3em, 5vw, 2.2em);
+    margin-bottom: 6px;
+    background: linear-gradient(90deg, #ffd93d, #ff9a3c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1.5px;
+    line-height: 1.2;
+  }
+  .subtitle {
+    text-align: center;
+    color: #b8c6e0;
+    margin-bottom: 20px;
+    font-size: clamp(0.75em, 3vw, 0.95em);
+  }
+
+  /* ===== Tombol menu utama ===== */
+  .menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .menu button {
+    padding: 14px 8px;
+    font-size: clamp(0.8em, 3.2vw, 0.95em);
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.3;
+    min-height: 52px;
+  }
+  .menu button:active { transform: scale(0.96); }
+  .menu button.active {
+    background: linear-gradient(135deg, #ffd93d, #ff9a3c);
+    color: #1e3c72;
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(255,217,61,0.4);
+  }
+
+  /* ===== Sub tab ===== */
+  .subtabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .subtabs button {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 10px 12px;
+    border-radius: 25px;
+    border: 2px solid #ffd93d;
+    background: transparent;
+    color: #ffd93d;
+    font-weight: 600;
+    font-size: clamp(0.75em, 3vw, 0.9em);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .subtabs button:active { transform: scale(0.96); }
+  .subtabs button.active {
+    background: #ffd93d;
+    color: #1e3c72;
+  }
+
+  /* ===== Panel konten ===== */
+  .panel {
+    background: rgba(0,0,0,0.25);
+    border-radius: 15px;
+    padding: 16px;
+    min-height: 280px;
+    border: 1px solid rgba(255,255,255,0.1);
+    animation: fadeIn 0.35s ease;
+    overflow-wrap: break-word;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .panel h2 {
+    color: #ffd93d;
+    margin-bottom: 14px;
+    font-size: clamp(1em, 4vw, 1.35em);
+    border-bottom: 2px solid rgba(255,217,61,0.3);
+    padding-bottom: 8px;
+    line-height: 1.35;
+  }
+  .rumus-box {
+    background: rgba(255,255,255,0.08);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border-left: 4px solid #ffd93d;
+  }
+  .rumus-box .label {
+    font-weight: 700;
+    color: #7ee8fa;
+    margin-bottom: 6px;
+    font-size: clamp(0.85em, 3.2vw, 1em);
+  }
+  .rumus-box .formula {
+    font-family: 'Cambria Math', Georgia, serif;
+    font-size: clamp(1em, 4.2vw, 1.25em);
+    color: #fff;
+    line-height: 1.7;
+    letter-spacing: 0.3px;
+    overflow-x: auto;
+  }
+  .rumus-box small {
+    display: block;
+    margin-top: 6px;
+    color: #b8c6e0;
+    font-size: clamp(0.72em, 2.8vw, 0.85em);
+    line-height: 1.5;
+  }
+  .placeholder {
+    text-align: center;
+    padding: 45px 15px;
+    color: #b8c6e0;
+    font-style: italic;
+    font-size: clamp(0.8em, 3.2vw, 0.95em);
+  }
+  .placeholder .icon { font-size: 2.5em; display: block; margin-bottom: 12px; }
+
+  /* ===== Contoh soal ===== */
+  .soal {
+    background: rgba(255,255,255,0.06);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border-left: 4px solid #7ee8fa;
+  }
+  .soal .q {
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+    font-size: clamp(0.82em, 3.2vw, 0.95em);
+    line-height: 1.5;
+  }
+  .soal .a {
+    color: #7ee8fa;
+    font-size: clamp(0.75em, 3vw, 0.9em);
+    line-height: 1.6;
+  }
+  .soal .a b { color: #ffd93d; }
+
+  /* ===== Animasi ===== */
+  .canvas-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .canvas-box {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(255,217,61,0.4);
+    background: #0f1c3f;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .controls button {
+    padding: 10px 22px;
+    border-radius: 22px;
+    border: none;
+    background: #ffd93d;
+    color: #1e3c72;
+    font-weight: 700;
+    font-size: clamp(0.8em, 3vw, 0.9em);
+    cursor: pointer;
+    transition: 0.2s;
+    min-width: 100px;
+  }
+  .controls button:active { transform: scale(0.95); background: #ff9a3c; color: #fff; }
+
+  /* ===== Tablet ke atas ===== */
+  @media (min-width: 640px) {
+    body { padding: 20px; }
+    .container { padding: 25px; }
+    .menu { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .menu button { padding: 16px 10px; min-height: 58px; }
+    .panel { padding: 22px; }
+    .rumus-box { padding: 15px 20px; margin-bottom: 12px; }
+    .soal { padding: 15px 18px; }
+  }
+
+  /* ===== Layar sangat kecil ===== */
+  @media (max-width: 360px) {
+    .menu { grid-template-columns: 1fr; }
+    .subtabs button { min-width: 70px; padding: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⚡ KINEMATIKA GERAK ⚡</h1>
+  <p class="subtitle">Media Pembelajaran Fisika Interaktif</p>
+
+  <!-- Menu Topik -->
+  <div class="menu" id="menuTopik">
+    <button data-topik="glb">GLB</button>
+    <button data-topik="glbb">GLBB</button>
+    <button data-topik="gjb">Gerak Jatuh Bebas</button>
+    <button data-topik="gvk">Gerak Vertikal Ke Atas</button>
+    <button data-topik="gvkb">Gerak Vertikal Ke Bawah</button>
+    <button data-topik="parabola">Gerak Parabola</button>
+    <button data-topik="gmb">GMB</button>
+  </div>
+
+  <!-- Sub Tab -->
+  <div class="subtabs" id="subTabs" style="display:none;">
+    <button data-sub="rumus">📐 Rumus</button>
+    <button data-sub="contoh">📝 Contoh Soal</button>
+    <button data-sub="animasi">🎬 Animasi</button>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel" id="panel">
+    <div class="placeholder">
+      <span class="icon">👆</span>
+      Pilih salah satu topik di atas untuk memulai
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA KONTEN
+   ============================================================ */
+const data = {
+  glb: {
+    nama: "Gerak Lurus Beraturan (GLB)",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Kecepatan</div>
+        <div class="formula">v = s / t</div>
+        <small>v = kecepatan (m/s), s = jarak (m), t = waktu (s)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Jarak</div>
+        <div class="formula">s = v · t</div>
+        <small>Pada GLB, kecepatan konstan (percepatan a = 0)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Waktu</div>
+        <div class="formula">t = s / v</div>
+        <small>Grafik v-t berupa garis horizontal</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Sebuah mobil bergerak dengan kecepatan konstan 20 m/s. Berapa jarak yang ditempuh setelah 15 detik?</div>
+        <div class="a"><b>Penyelesaian:</b><br>s = v · t = 20 × 15 = <b>300 m</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Andi bersepeda menempuh jarak 1.200 m dalam waktu 4 menit. Berapa kecepatannya?</div>
+        <div class="a"><b>Penyelesaian:</b><br>t = 4 menit = 240 s<br>v = s/t = 1200/240 = <b>5 m/s</b></div>
+      </div>
+    `,
+    animasi: "glb"
+  },
+  glbb: {
+    nama: "Gerak Lurus Berubah Beraturan (GLBB)",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Kecepatan sesaat</div>
+        <div class="formula">v<sub>t</sub> = v<sub>0</sub> + a · t</div>
+        <small>v₀ = kecepatan awal (m/s), a = percepatan (m/s²)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Jarak tempuh</div>
+        <div class="formula">s = v<sub>0</sub>·t + ½·a·t²</div>
+        <small>Berlaku untuk percepatan konstan</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Hubungan tanpa waktu</div>
+        <div class="formula">v<sub>t</sub>² = v<sub>0</sub>² + 2·a·s</div>
+        <small>Digunakan jika t tidak diketahui</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Mobil mula-mula diam, lalu dipercepat 3 m/s² selama 8 s. Berapa kecepatan akhirnya?</div>
+        <div class="a"><b>Penyelesaian:</b><br>v<sub>t</sub> = v₀ + a·t = 0 + 3·8 = <b>24 m/s</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Sebuah benda bergerak dengan v₀ = 10 m/s dan a = 2 m/s². Berapa jarak setelah 5 s?</div>
+        <div class="a"><b>Penyelesaian:</b><br>s = v₀t + ½at² = 10·5 + ½·2·25 = 50 + 25 = <b>75 m</b></div>
+      </div>
+    `,
+    animasi: "glbb"
+  },
+  gjb: {
+    nama: "Gerak Jatuh Bebas",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Kecepatan jatuh</div>
+        <div class="formula">v = g · t</div>
+        <small>v₀ = 0 (dijatuhkan tanpa kecepatan awal)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Ketinggian</div>
+        <div class="formula">h = ½ · g · t²</div>
+        <small>h = ketinggian dari titik jatuh (m)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Hubungan v dan h</div>
+        <div class="formula">v = √(2 · g · h)</div>
+        <small>g = percepatan gravitasi ≈ 9,8 m/s² (sering dibulatkan 10)</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Buah kelapa jatuh dari ketinggian 20 m. Jika g = 10 m/s², berapa waktu sampai tanah?</div>
+        <div class="a"><b>Penyelesaian:</b><br>h = ½gt² → 20 = ½·10·t² → t² = 4 → <b>t = 2 s</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Berapa kecepatan buah kelapa saat menyentuh tanah (h = 20 m, g = 10 m/s²)?</div>
+        <div class="a"><b>Penyelesaian:</b><br>v = √(2gh) = √(2·10·20) = √400 = <b>20 m/s</b></div>
+      </div>
+    `,
+    animasi: "gjb"
+  },
+  gvk: {
+    nama: "Gerak Vertikal Ke Atas",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Kecepatan sesaat</div>
+        <div class="formula">v<sub>t</sub> = v<sub>0</sub> − g · t</div>
+        <small>Percepatan = −g (melawan gravitasi)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Ketinggian</div>
+        <div class="formula">h = v<sub>0</sub>·t − ½·g·t²</div>
+        <small>h = ketinggian benda pada waktu t</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Tinggi maksimum</div>
+        <div class="formula">h<sub>max</sub> = v<sub>0</sub>² / (2g)</div>
+        <small>Terjadi saat v<sub>t</sub> = 0 (titik tertinggi)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Waktu maksimum</div>
+        <div class="formula">t<sub>max</sub> = v<sub>0</sub> / g</div>
+        <small>Waktu untuk mencapai titik tertinggi</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Bola dilempar ke atas dengan v₀ = 20 m/s (g = 10 m/s²). Berapa tinggi maksimumnya?</div>
+        <div class="a"><b>Penyelesaian:</b><br>h<sub>max</sub> = v₀²/(2g) = 400/20 = <b>20 m</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Berapa lama bola berada di udara (sampai kembali ke tangan)?</div>
+        <div class="a"><b>Penyelesaian:</b><br>t<sub>naik</sub> = v₀/g = 20/10 = 2 s<br>t<sub>total</sub> = 2 × 2 = <b>4 s</b></div>
+      </div>
+    `,
+    animasi: "gvk"
+  },
+  gvkb: {
+    nama: "Gerak Vertikal Ke Bawah",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Kecepatan sesaat</div>
+        <div class="formula">v<sub>t</sub> = v<sub>0</sub> + g · t</div>
+        <small>Benda dilempar ke bawah dengan kecepatan awal v₀</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Ketinggian / jarak tempuh</div>
+        <div class="formula">h = v<sub>0</sub>·t + ½·g·t²</div>
+        <small>Percepatan searah gravitasi (a = +g)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Hubungan tanpa waktu</div>
+        <div class="formula">v<sub>t</sub>² = v<sub>0</sub>² + 2·g·h</div>
+        <small>Berguna jika t tidak diketahui</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Perbedaan dengan Jatuh Bebas</div>
+        <div class="formula">GVKB: v<sub>0</sub> ≠ 0 &nbsp;|&nbsp; GJB: v<sub>0</sub> = 0</div>
+        <small>Pada GVKB benda diberi kecepatan awal ke bawah</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Bola dilempar ke bawah dari gedung dengan v₀ = 5 m/s. Setelah 3 s, berapa kecepatannya? (g = 10 m/s²)</div>
+        <div class="a"><b>Penyelesaian:</b><br>v<sub>t</sub> = v₀ + g·t = 5 + 10·3 = <b>35 m/s</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Berapa jarak yang ditempuh bola tersebut dalam 3 s?</div>
+        <div class="a"><b>Penyelesaian:</b><br>h = v₀t + ½gt² = 5·3 + ½·10·9 = 15 + 45 = <b>60 m</b></div>
+      </div>
+    `,
+    animasi: "gvkb"
+  },
+  parabola: {
+    nama: "Gerak Parabola",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Kecepatan awal (komponen)</div>
+        <div class="formula">v<sub>0x</sub> = v<sub>0</sub>·cos θ</div>
+        <div class="formula">v<sub>0y</sub> = v<sub>0</sub>·sin θ</div>
+        <small>Gerak sumbu-x (GLB) dan sumbu-y (GLBB) terpisah</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Posisi setiap saat</div>
+        <div class="formula">x = v<sub>0</sub>·cos θ · t</div>
+        <div class="formula">y = v<sub>0</sub>·sin θ · t − ½·g·t²</div>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Tinggi maksimum</div>
+        <div class="formula">h<sub>max</sub> = (v<sub>0</sub>² · sin²θ) / (2g)</div>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Jarak terjauh (jangkauan)</div>
+        <div class="formula">R = (v<sub>0</sub>² · sin 2θ) / g</div>
+        <small>Jangkauan maksimum saat θ = 45°</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Bola ditendang dengan v₀ = 20 m/s pada sudut 30° (g = 10 m/s²). Berapa tinggi maksimum?</div>
+        <div class="a"><b>Penyelesaian:</b><br>sin 30° = 0,5<br>h<sub>max</sub> = (20²·0,5²)/(2·10) = (400·0,25)/20 = <b>5 m</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Berapa jarak terjauh bola tersebut?</div>
+        <div class="a"><b>Penyelesaian:</b><br>sin 2θ = sin 60° = ½√3 ≈ 0,866<br>R = (400·0,866)/10 = <b>34,64 m</b></div>
+      </div>
+    `,
+    animasi: "parabola"
+  },
+  gmb: {
+    nama: "Gerak Melingkar Beraturan (GMB)",
+    rumus: `
+      <div class="rumus-box">
+        <div class="label">Periode & Frekuensi</div>
+        <div class="formula">T = 1 / f &nbsp;|&nbsp; f = 1 / T</div>
+        <small>T = periode (s), f = frekuensi (Hz)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Kecepatan sudut</div>
+        <div class="formula">ω = 2π / T = 2π·f</div>
+        <small>ω = kecepatan sudut (rad/s)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Kecepatan linear</div>
+        <div class="formula">v = ω · r = 2π·r / T</div>
+        <small>r = jari-jari lintasan (m)</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Percepatan sentripetal</div>
+        <div class="formula">a<sub>s</sub> = v² / r = ω² · r</div>
+        <small>Selalu menuju pusat lingkaran</small>
+      </div>
+      <div class="rumus-box">
+        <div class="label">Sudut tempuh</div>
+        <div class="formula">θ = ω · t</div>
+        <small>θ dalam radian (1 putaran = 2π rad = 360°)</small>
+      </div>
+    `,
+    contoh: `
+      <div class="soal">
+        <div class="q">1. Sebuah benda bergerak melingkar dengan jari-jari 0,5 m dan periode 2 s. Berapa kecepatan linearnya?</div>
+        <div class="a"><b>Penyelesaian:</b><br>v = 2πr/T = (2·3,14·0,5)/2 = <b>1,57 m/s</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">2. Berapa percepatan sentripetal benda tersebut?</div>
+        <div class="a"><b>Penyelesaian:</b><br>a<sub>s</sub> = v²/r = (1,57)²/0,5 = 2,46/0,5 = <b>4,93 m/s²</b></div>
+      </div>
+      <div class="soal">
+        <div class="q">3. Berapa kecepatan sudutnya?</div>
+        <div class="a"><b>Penyelesaian:</b><br>ω = 2π/T = 2·3,14/2 = <b>3,14 rad/s</b></div>
+      </div>
+    `,
+    animasi: "gmb"
+  }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let topikAktif = null;
+let subAktif = null;
+let animId = null;
+
+const panel = document.getElementById('panel');
+const subTabs = document.getElementById('subTabs');
+const menuTopik = document.getElementById('menuTopik');
+
+/* ============================================================
+   KLIK TOPIK
+   ============================================================ */
+menuTopik.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  topikAktif = btn.dataset.topik;
+  subAktif = null;
+
+  [...menuTopik.children].forEach(b => b.classList.toggle('active', b === btn));
+  subTabs.style.display = 'flex';
+  [...subTabs.children].forEach(b => b.classList.remove('active'));
+
+  stopAnim();
+  panel.innerHTML = `
+    <h2>${data[topikAktif].nama}</h2>
+    <div class="placeholder">
+      <span class="icon">📌</span>
+      Pilih menu di atas:<br>Rumus, Contoh Soal, atau Animasi
+    </div>`;
+});
+
+/* ============================================================
+   KLIK SUB TAB
+   ============================================================ */
+subTabs.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn || !topikAktif) return;
+  subAktif = btn.dataset.sub;
+
+  [...subTabs.children].forEach(b => b.classList.toggle('active', b === btn));
+  stopAnim();
+
+  if (subAktif === 'rumus') {
+    panel.innerHTML = `<h2>📐 Rumus — ${data[topikAktif].nama}</h2>${data[topikAktif].rumus}`;
+  } else if (subAktif === 'contoh') {
+    panel.innerHTML = `<h2>📝 Contoh Soal — ${data[topikAktif].nama}</h2>${data[topikAktif].contoh}`;
+  } else if (subAktif === 'animasi') {
+    panel.innerHTML = `<h2>🎬 Animasi — ${data[topikAktif].nama}</h2>
+      <div class="canvas-wrap">
+        <div class="canvas-box"><canvas id="cv" width="700" height="320"></canvas></div>
+        <div class="controls">
+          <button id="btnPlay">▶ Putar</button>
+          <button id="btnReset">🔄 Reset</button>
+        </div>
+      </div>`;
+    initAnimasi(data[topikAktif].animasi);
+  }
+});
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+function stopAnim() {
+  if (animId) { cancelAnimationFrame(animId); animId = null; }
+}
+
+/* ============================================================
+   ANIMASI
+   ============================================================ */
+function initAnimasi(jenis) {
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  let t = 0, playing = false, lastTime = 0;
+
+  const btnPlay = document.getElementById('btnPlay');
+  const btnReset = document.getElementById('btnReset');
+
+  const params = {
+    glb:      { v: 60, x0: 40 },
+    glbb:     { v0: 0, a: 25, x0: 40 },
+    gjb:      { g: 200, h0: 40 },
+    gvk:      { v0: -260, g: 200, y0: H - 40 },
+    gvkb:     { v0: 60, g: 150, y0: 40 },
+    parabola: { v0: 220, sudut: 55 * Math.PI / 180, g: 200, x0: 40, y0: H - 40 },
+    gmb:      { r: 110, omega: 1.8, cx: W / 2, cy: H / 2 }
+  };
+
+  function drawBackground() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  }
+
+  function drawBall(x, y, color = '#ffd93d') {
+    ctx.beginPath();
+    ctx.arc(x, y, 12, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  function label(text, x, y) {
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px -apple-system, Segoe UI, sans-serif';
+    ctx.fillText(text, x, y);
+  }
+
+  function frame(now) {
+    if (!lastTime) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    if (playing) t += dt;
+
+    drawBackground();
+
+    if (jenis === 'glb') {
+      const p = params.glb;
+      let x = p.x0 + p.v * t;
+      if (x > W - 20) { x = W - 20; playing = false; }
+      ctx.strokeStyle = 'rgba(255,217,61,0.3)';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(p.x0, H - 40); ctx.lineTo(x, H - 40); ctx.stroke();
+      drawBall(x, H - 40);
+      label(`v = ${p.v} px/s (konstan)`, 20, 30);
+      label(`t = ${t.toFixed(2)} s`, 20, 55);
+    }
+
+    else if (jenis === 'glbb') {
+      const p = params.glbb;
+      let x = p.x0 + p.v0 * t + 0.5 * p.a * t * t;
+      if (x > W - 20) { x = W - 20; playing = false; }
+      const v = p.v0 + p.a * t;
+      ctx.strokeStyle = 'rgba(126,232,250,0.3)';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(p.x0, H - 40); ctx.lineTo(x, H - 40); ctx.stroke();
+      drawBall(x, H - 40, '#7ee8fa');
+      label(`a = ${p.a} px/s²`, 20, 30);
+      label(`v = ${v.toFixed(1)} px/s`, 20, 55);
+      label(`t = ${t.toFixed(2)} s`, 20, 80);
+    }
+
+    else if (jenis === 'gjb') {
+      const p = params.gjb;
+      let y = p.h0 + 0.5 * p.g * t * t;
+      if (y > H - 30) { y = H - 30; playing = false; }
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(W / 2, p.h0); ctx.lineTo(W / 2, H - 30); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(126,232,250,0.15)';
+      ctx.fillRect(0, H - 30, W, 30);
+      drawBall(W / 2, y, '#ff6b6b');
+      label(`g = 10 m/s² (v₀ = 0)`, 20, 30);
+      label(`v = ${(p.g * t).toFixed(1)} px/s`, 20, 55);
+      label(`t = ${t.toFixed(2)} s`, 20, 80);
+    }
+
+    else if (jenis === 'gvk') {
+      const p = params.gvk;
+      let y = p.y0 + p.v0 * t + 0.5 * p.g * t * t;
+      let v = p.v0 + p.g * t;
+      if (t > 0 && y >= p.y0) { y = p.y0; playing = false; }
+      ctx.fillStyle = 'rgba(126,232,250,0.15)';
+      ctx.fillRect(0, H - 30, W, 30);
+      ctx.strokeStyle = 'rgba(255,217,61,0.2)';
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(W / 2, 30); ctx.lineTo(W / 2, p.y0); ctx.stroke();
+      ctx.setLineDash([]);
+      drawBall(W / 2, y);
+      label(`v₀ = 20 m/s (dilempar ke atas)`, 20, 30);
+      label(`v = ${(-v).toFixed(1)} px/s`, 20, 55);
+      label(`t = ${t.toFixed(2)} s`, 20, 80);
+    }
+
+    else if (jenis === 'gvkb') {
+      const p = params.gvkb;
+      let y = p.y0 + p.v0 * t + 0.5 * p.g * t * t;
+      if (y > H - 30) { y = H - 30; playing = false; }
+      ctx.fillStyle = 'rgba(126,232,250,0.15)';
+      ctx.fillRect(0, H - 30, W, 30);
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(W / 2, p.y0); ctx.lineTo(W / 2, H - 30); ctx.stroke();
+      ctx.setLineDash([]);
+      drawBall(W / 2, y, '#a5ff6b');
+      const v = p.v0 + p.g * t;
+      label(`v₀ = 5 m/s (dilempar ke bawah)`, 20, 30);
+      label(`v = ${v.toFixed(1)} px/s`, 20, 55);
+      label(`t = ${t.toFixed(2)} s`, 20, 80);
+    }
+
+    else if (jenis === 'parabola') {
+      const p = params.parabola;
+      const vx = p.v0 * Math.cos(p.sudut);
+      const vy = p.v0 * Math.sin(p.sudut);
+      let x = p.x0 + vx * t;
+      let y = p.y0 - (vy * t - 0.5 * p.g * t * t);
+      if (y > p.y0) { y = p.y0; playing = false; }
+      if (x > W - 20) { x = W - 20; playing = false; }
+      ctx.strokeStyle = 'rgba(255,217,61,0.25)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let tt = 0; tt <= 4; tt += 0.02) {
+        let xx = p.x0 + vx * tt;
+        let yy = p.y0 - (vy * tt - 0.5 * p.g * tt * tt);
+        if (yy > p.y0) break;
+        if (tt === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      drawBall(x, y, '#ff9a3c');
+      label(`θ = 55°`, 20, 30);
+      label(`v₀ = 220 px/s`, 20, 55);
+      label(`t = ${t.toFixed(2)} s`, 20, 80);
+    }
+
+    else if (jenis === 'gmb') {
+      const p = params.gmb;
+      const sudut = p.omega * t;
+      const x = p.cx + p.r * Math.cos(sudut);
+      const y = p.cy + p.r * Math.sin(sudut);
+      // lintasan lingkaran
+      ctx.strokeStyle = 'rgba(126,232,250,0.35)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // jari-jari
+      ctx.strokeStyle = 'rgba(255,217,61,0.5)';
+      ctx.beginPath();
+      ctx.moveTo(p.cx, p.cy);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      // pusat
+      ctx.beginPath();
+      ctx.arc(p.cx, p.cy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#7ee8fa';
+      ctx.fill();
+      // bola
+      drawBall(x, y, '#ff6b6b');
+      label(`r = ${p.r} px`, 20, 30);
+      label(`ω = ${p.omega.toFixed(2)} rad/s`, 20, 55);
+      label(`t = ${t.toFixed(2)} s`, 20, 80);
+    }
+
+    animId = requestAnimationFrame(frame);
+  }
+
+  btnPlay.onclick = () => {
+    if (playing) {
+      playing = false;
+      btnPlay.textContent = '▶ Putar';
+    } else {
+      playing = true;
+      lastTime = 0;
+      btnPlay.textContent = '⏸ Jeda';
+      animId = requestAnimationFrame(frame);
+    }
+  };
+
+  btnReset.onclick = () => {
+    stopAnim();
+    playing = false;
+    t = 0;
+    lastTime = 0;
+    btnPlay.textContent = '▶ Putar';
+    animId = requestAnimationFrame(frame);
+    playing = false;
+  };
+
+  // gambar frame awal
+  animId = requestAnimationFrame(frame);
+  playing = false;
+}
+</script>
+</body>
+</html>
